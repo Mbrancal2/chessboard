@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/board.h
+vector
+-
+
+../include/interface.h
+unordered_map
+-
+board.h
+../include/board.h
+
+../include/rules.h
+board.h
+../include/board.h
+
+/home/mbrancal/project_C++/chessgame/src/chessgame.cpp
+iostream
+-
+interface.h
+/home/mbrancal/project_C++/chessgame/src/interface.h
+board.h
+/home/mbrancal/project_C++/chessgame/src/board.h
+rules.h
+/home/mbrancal/project_C++/chessgame/src/rules.h
+

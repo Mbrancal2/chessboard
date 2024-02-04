@@ -1,0 +1,4 @@
+/home/mbrancal/project_C++/chessgame/build/CMakeFiles/rebuild_cache.dir
+/home/mbrancal/project_C++/chessgame/build/CMakeFiles/edit_cache.dir
+/home/mbrancal/project_C++/chessgame/build/CMakeFiles/test.dir
+/home/mbrancal/project_C++/chessgame/build/CMakeFiles/chessgame.dir
