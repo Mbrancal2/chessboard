@@ -1,7 +1,7 @@
 #ifndef RULES_H
 #define RULES_H
 #include "board.h"
-//#pragma once
+
 class Rule {
     public:
         Rule();
@@ -21,7 +21,6 @@ class Rule {
         bool is_piece_in_way_horizontal(int start_row, int start_col, int end_col, const Board &board);
         bool is_piece_in_way_vertical(int start_row, int start_col, int end_row, const Board &board);
         bool is_piece_in_way_diagonal(int start_row, int start_col, int end_row, int end_col, const Board &board);
-    //maybe add something here later if it is needed.
         
 };
 #endif

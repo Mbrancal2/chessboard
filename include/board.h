@@ -1,26 +1,27 @@
 #ifndef BOARD_H
 #define BOARD_H
 #include <vector>
-//#include "rules.h"
-//#pragma once
 
 class Board{
     
     public:
         static const int SIZE_CHESS = 8;
         static const int NUM_PIECES = 6;
-        //static const int NUM_OF_PAWNS = 16;
         Board();
         Board(int chessboard[SIZE_CHESS][SIZE_CHESS],
-        int black_lost[NUM_PIECES],
-        int white_lost[NUM_PIECES],
+        int black_captured[NUM_PIECES],
+        int white_captured[NUM_PIECES],
         int white_player_points,
         int black_player_points, bool in_checkmate);
         Board(int chessboard[SIZE_CHESS][SIZE_CHESS]);
         ~Board();
+
         /* first checks if a move is possible
         if the move is possible updates the board */
         bool make_move(int start_row, int start_col, int end_row, int end_col);
+        
+        //FOR TESTING, MAKES MOVE IGNOEING EVERY RULE
+        bool make_move_ir(int start_row, int start_col, int end_row, int end_col);
 
         /* gets the total points white player has*/
         const int get_white_player_points() const;
@@ -36,19 +37,19 @@ class Board{
 
         /* gets the vector containing the pieces
         black has lost*/
-        const int *get_black_lost() const;
+        const int *get_black_captured() const;
 
          /* gets the vector containing the pieces
         white has lost*/
-        const int *get_white_lost() const;
+        const int *get_white_captured() const;
 
         /* updates the points in the black_lost
         array based on which piece was taken*/
-        void update_black_lost(int piece);
+        void update_black_captured(int piece);
           
         /* updates the points in the white_lost
         array based on which piece was taken*/
-        void update_white_lost(int piece);
+        void update_white_captured(int piece);
 
         /* updates in_checkmate variable with 
         bool in answer*/
@@ -62,8 +63,8 @@ class Board{
 
     private:
         int chessboard[SIZE_CHESS][SIZE_CHESS];
-        int black_lost[NUM_PIECES];
-        int white_lost[NUM_PIECES];
+        int black_captured[NUM_PIECES];
+        int white_captured[NUM_PIECES];
         int white_player_points;
         int black_player_points;
         //add rules instance.

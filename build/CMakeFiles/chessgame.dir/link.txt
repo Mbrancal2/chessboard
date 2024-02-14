@@ -1,1 +1,1 @@
-/usr/bin/c++     CMakeFiles/chessgame.dir/src/chessgame.cpp.o CMakeFiles/chessgame.dir/src/interface.cpp.o CMakeFiles/chessgame.dir/src/board.cpp.o CMakeFiles/chessgame.dir/src/rules.cpp.o  -o chessgame 
+/usr/bin/c++  -g   CMakeFiles/chessgame.dir/src/chessgame.cpp.o CMakeFiles/chessgame.dir/src/interface.cpp.o CMakeFiles/chessgame.dir/src/board.cpp.o CMakeFiles/chessgame.dir/src/rules.cpp.o  -o chessgame 
