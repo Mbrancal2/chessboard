@@ -5,23 +5,46 @@
 Rule::Rule(){};
 Rule::~Rule(){};
 
-//TODO IMPLIMENT AND TEST
-//TODO IMPLIMENT EN PASSANT RULE.
+//checks if a pawn piece is able to make given move
 bool Rule::pawn_rule(int start_row, int start_col, int end_row, int end_col, const Board &board){
     //must be pawns first move.
     if((start_row +2 == end_row && start_col == end_col) || (start_row -2 == end_row && start_col == end_col)){
+
+        if(start_row +2 == end_row && start_col == end_col){
+            if(board.get_value_at_position(start_row + 1, start_col) != 0){
+                return false;
+            }
+        }
+        else if(start_row -2 == end_row && start_col == end_col){
+            if(board.get_value_at_position(start_row - 1, start_col) != 0){
+                return false;
+            }
+        }
+
         //determine if the pawn is white or black.
         bool pawn_color = board.get_value_at_position(start_row, start_col);
         //determine if it is the first time the pawn is moving.
-        if((start_row == 1 && pawn_color == true) || (start_row == 6 && pawn_color == false)){
+        if((start_row == 1 && pawn_color == true ) || (start_row == 6 && pawn_color == false)){
             return true;
         }
         return false;
     }
-    // pawn can only move one space up and it can't attack straight on.
+
+    //checks if a king piece is able to make given move
     else if((start_row +1 == end_row && start_col == end_col) || (start_row -1 == end_row && start_col == end_col)){
         //determine if pawn is white of black
-        bool pawn_color = board.get_value_at_position(start_row, start_col);
+        int pawn_color = board.get_value_at_position(start_row, start_col);
+        //make sure black pawns cant go backwards.
+        if(pawn_color < 0){
+            if(end_row < start_row){
+                return false;
+            }
+        }
+        else if(pawn_color > 0){
+            if(end_row > start_row){
+                return false;
+            }
+        }
         //see if tile to move to is empty.
         if(board.get_value_at_position(end_row,end_col) == 0){
             return true;
@@ -46,9 +69,9 @@ bool Rule::pawn_rule(int start_row, int start_col, int end_row, int end_col, con
     }
     return false;
 }
-//TODO IMPLIMENT AND TEST
+
+//checks if a knight piece is able to make given move
 bool Rule::knight_rule(int start_row, int start_col, int end_row, int end_col){
-    //already checked things like if tile to go to has piece with same color. or if tile to go to is out of bounds.
     if(start_row + 2 == end_row){
         if(start_col + 1 == end_col){
             return true;
@@ -67,10 +90,26 @@ bool Rule::knight_rule(int start_row, int start_col, int end_row, int end_col){
         }
 
     }
+    else if(start_row + 1 == end_row){
+        if(start_col +2 == end_col){
+            return true;
+        }
+        else if(start_col -2 == end_col){
+            return true;
+        }
+    }
+    else if(start_row -1 == end_row){
+        if(start_col +2 == end_col){
+            return true;
+        }
+        else if(start_col -2 == end_col){
+            return true;
+        }
+    }
     return false;
 }
-//TODO IMPLIMENT AND TEST
-//A ROOCK CAN MOVE HORIZONTALLY OR VERTICALLY.
+
+//checks if a rook piece is able to make given move
 bool Rule::rook_rule(int start_row, int start_col, int end_row, int end_col, const Board &board){
     if(start_row == end_row){
         return is_piece_in_way_horizontal(start_row, start_col, end_col, board);
@@ -80,22 +119,51 @@ bool Rule::rook_rule(int start_row, int start_col, int end_row, int end_col, con
     }
     return false;
 }
-//TODO IMPLIMENT AND TEST
-// A BISHOP CAN ONLY MOVE DIAGONALLY.
+
+//checks if a bishop piece is able to make given move
 bool Rule::bishop_rule(int start_row, int start_col, int end_row, int end_col, const Board &board){
     if(abs(start_row - end_row) == abs(start_col - end_col)){
         return is_piece_in_way_diagonal(start_row, start_row, end_row, end_col, board);
     }
     return false;
 }
-//TODO IMPLIMENT AND TEST
+
+//checks if a king piece is able to make given move
 bool Rule::king_rule(int start_row, int start_col, int end_row, int end_col){
-    //alredy checked if move is out of bounds with out_of_bounds() in choose_rule()
-    //alredy checked if move is to tile that has piece with same tile, with same_color_rule
-    //so that means that the king must be able to make a move. so always return true.
-    return true;
+    if(start_row + 1 == end_row){
+        if(start_col == end_col){
+            return true;
+        }
+        else if(start_col - 1 == end_col){
+            return true;
+        }
+        else if(start_col + 1 == end_col){
+            return true;
+        }
+    }
+    else if(start_row == end_row){
+        if(start_col - 1 == end_col){
+            return true;
+        }
+        else if(start_col + 1 == end_col){
+            return true;
+        }
+    }
+    else if(start_row -1 == end_row){
+        if(start_col == end_col){
+            return true;
+        }
+        else if(start_col - 1 == end_col){
+            return true;
+        }
+        else if(start_col + 1 == end_col){
+            return true;
+        }
+    }
+    return false;
 }
-//TODO IMPLIMENT AND TEST
+
+//checks if a queen piece is able to make given move.
 //the queen has the moveset of the king, rook, and bishop
 bool Rule::queen_rule(int start_row, int start_col, int end_row, int end_col, const Board &board){
 
@@ -111,14 +179,10 @@ bool Rule::queen_rule(int start_row, int start_col, int end_row, int end_col, co
     else if(start_col == end_col){
         return is_piece_in_way_vertical(start_row, start_col, end_row, board);
     }
-    //means that it is moving to a tile withing a one block radius of
-    //its current tile issues like an out of bounds move
-    //and a move that would mean capturing a piece of the same color
-    //have alredy been checked in choose_rule(). So return true.
     return true;
 }
 
-//TODO IMPLIMENT AND TEST
+//determines if a move can be made through evaluating different chess rules and movesets for a given piece.
 bool Rule::choose_rule(int start_row, int start_col, int end_row, int end_col, const Board &board){
 
     bool answer = out_of_bounds_rule(start_row, start_col, end_row, end_col);
@@ -163,10 +227,11 @@ bool Rule::choose_rule(int start_row, int start_col, int end_row, int end_col, c
         break;
     }
 
-    return false;
+    return answer;
 
 }
 
+//checks if a selected move is out of the 7 by 7 board.
 bool Rule::out_of_bounds_rule(int start_row, int start_col, int end_row, int end_col){
     if(start_row < 0 || start_row > 7){
         return false;
@@ -183,6 +248,7 @@ bool Rule::out_of_bounds_rule(int start_row, int start_col, int end_row, int end
     return true;
 }
 
+//checks if a move from one piece will not be to another piece of the same color
 bool Rule::same_color_rule(int piece1, int piece2){
     if(piece1 < 0 && piece2 < 0){
         return false;
@@ -193,6 +259,8 @@ bool Rule::same_color_rule(int piece1, int piece2){
     return true;
 }
 
+//checks if the given tile is not empty by checking if the value of that tile is 0 or not.
+//if piece on given tile is 0 that means tile is empty and return false. Else return true.
 bool Rule::is_not_zero(int piece1){
     if(piece1 == 0){
         return false;
@@ -201,12 +269,9 @@ bool Rule::is_not_zero(int piece1){
 
 }
 
-//TODO: add a rule that makse it return false if a user picks the same end and start position
-//check this function.
+//checks if a piece ia able to make a horizontal move.
+//checks if a piece is in the way of a horizontal move.
 bool Rule::is_piece_in_way_horizontal(int start_row, int start_col, int end_col, const Board &board){
-    //int temp_row = start_row;
-    //int temp_col = start_col;
-
     if(start_col < end_col){
         start_col++;
         while(start_col < end_col){
@@ -235,8 +300,8 @@ bool Rule::is_piece_in_way_horizontal(int start_row, int start_col, int end_col,
     return false;
 }
 
-//TODO: add a rule that makse it return false if a user picks the same end and start position
-//check this function.
+//checks if a piece ia able to make a vertical move.
+//checks if a piece is in the way of a vertical move.
 bool Rule::is_piece_in_way_vertical(int start_row, int start_col, int end_row, const Board &board){
 
     if(start_row < end_row){
@@ -266,9 +331,8 @@ bool Rule::is_piece_in_way_vertical(int start_row, int start_col, int end_row, c
     }
     return false;
 }
-//TODO: add a rule that makse it return false if a user picks the same end and start position
-//check this function.
-//TODO: YOU REALLY NEED TO CHECK THIS ONE USING TESTS.
+//checks if a piece ia able to make a diagonal move.
+//checks if a piece is in the way of a diagonal move.
 bool Rule::is_piece_in_way_diagonal(int start_row, int start_col, int end_row, int end_col, const Board &board){
 
     if(start_row > end_row && start_col < end_col){

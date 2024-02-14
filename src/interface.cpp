@@ -5,11 +5,11 @@
 #include <cstdlib>
 
 Interface::Interface():board{},
-piece_value{{0,5}, {1,2}, {2,3}, {3,6}, {4,9}, {5,1}}{}
+piece_value{{0,5}, {1,2}, {2,3}, {3,9}, {4,6}, {5,1}}{}
 
-//only for testing purposes.
+//a constructor only used for testing purposes.
 Interface::Interface(int chessboard[SIZE_CHESS][SIZE_CHESS]):
-piece_value{{0,5}, {1,2}, {2,3}, {3,6}, {4,9}, {5,1}}, board(chessboard){};
+piece_value{{0,5}, {1,2}, {2,3}, {3,9}, {4,6}, {5,1}}, board(chessboard){};
 
 Interface::~Interface(){}
 
@@ -25,10 +25,8 @@ void Interface::print_box_middle_end(int number){
     else{
         std::cout << number << "|  ";
     }
-    
-    
 }
-void Interface::print_lost_box_top(int color){
+void Interface::print_captured_box_top(){
 
     std::cout<< "\033[1;31m   R    N    B    Q    K    P\033[0m    ";
     std::cout << "   R    N    B    Q    K    P\n";
@@ -36,16 +34,15 @@ void Interface::print_lost_box_top(int color){
 }
 
 
-void Interface::print_lost_box_middle_end(){
+void Interface::print_captured_box_middle_end(){
+    std::cout << piece_value[0];
 
-    //const int * temp_array_black = board.get_black_lost();
-    //const int * temp_array_white = board.get_white_lost();
     for(int i = 0; i < 6; i++){
-        std::cout <<"  |" << abs(board.get_black_lost()[i])/piece_value[i]<< "|";
+        std::cout <<"  |" << abs(board.get_black_captured()[i])/piece_value[i] << "|";
     }
     std::cout <<"    ";
     for(int j = 0; j < 6; j++){
-        std::cout <<"  |" << abs(board.get_white_lost()[j])/piece_value[j]<< "|";
+        std::cout <<"  |" << abs(board.get_white_captured()[j])/piece_value[j]<< "|";
     }
     std::cout << std::endl;
 }
@@ -53,7 +50,6 @@ void Interface::print_lost_box_middle_end(){
 
 void Interface::print_box_start(int row, int number){
    if(number < 0){
-     //std::string number_temp = std::to_string(abs(number));
      std::cout << row <<"| \033[1;31m"<< abs(number) << " \033[0m|  ";
    }
    else{
@@ -66,6 +62,7 @@ void Interface::print_line(){
     std::cout <<"\n  --------------------------------\n";
 }
 
+//prints out board.
 void Interface::print_board_state(){
     print_score();
     print_header();
@@ -80,11 +77,11 @@ void Interface::print_board_state(){
         }
         print_line();
     }
-    print_lost_box_top(0);
-    print_lost_box_middle_end();
+    print_captured_box_top();
+    print_captured_box_middle_end();
 }
 
-//TODO:IMPLIMENT
+//starts the process of making a move.
 void Interface::make_move(){
     int srow, scol, erow, ecol;
     std::cout << "make move: enter start row, start col, end row, end col: ";
@@ -92,25 +89,40 @@ void Interface::make_move(){
     board.make_move(srow,scol,erow,ecol);
 
 }
-//ONLY FOR TESTS
-void Interface::make_move(int start_row, int start_col, int end_row, int end_col){
-    board.make_move(start_row, start_col, end_row, end_col);
+
+//ONLY FOR TESTS -- FOR TESTING RULES
+bool Interface::make_move(int start_row, int start_col, int end_row, int end_col){
+    return board.make_move(start_row, start_col, end_row, end_col);
 }
 
-//TODO:IMPLIMENT
-void Interface::print_lost_pieces(){
+//ONLY FOR TESTS -- FOR PLACEING PICES IGNORING RULES
+bool Interface::make_move_ir(int start_row, int start_col, int end_row, int end_col){
+    return board.make_move_ir(start_row, start_col, end_row, end_col);
 
 }
 
+//prints out bothplayers scores.
 void Interface::print_score(){
     std::cout <<"\033[1;31mBlack Player's Score\033[0m " << board.get_black_player_points()
     << "    White Player's Score " << board.get_white_player_points()<<std::endl <<std::endl;
 }
-//TODO:IMPLIMENT
+
+//prints out a simple win screen.
 void Interface::print_win_screen(){
+    bool winning_color = false;
+    if(board.get_white_captured()[4] == 1 ){
+        winning_color = true;
+    }
+    if(!winning_color){
+        std::cout << "\033[1;31mBLACK PLAYER HAS WON!!!! \033[0m\n";
+    }
+    else{
+        std::cout << "WHITE PLAYER HAS WON!!!!\n";
+    }
 
 }
-//TODO:IMPLIMENT
-void Interface::checkmate(){
 
+//is used to check if the game is over.
+bool Interface::is_game_over(){
+    return board.get_in_checkmate();
 }
